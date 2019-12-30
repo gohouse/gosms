@@ -21,6 +21,7 @@ func (*MysqlDriver) CreateTable(db *gorose.Engin) (err error) {
   mobile varchar(12) NOT NULL COMMENT '手机号',
   ip varchar(15) NOT NULL DEFAULT '' COMMENT 'ip',
   created_at datetime DEFAULT CURRENT_TIMESTAMP,
+  updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='短信验证码';`, db.GetPrefix(), "sms")
 	_, err = db.NewSession().Execute(sqlStr)
