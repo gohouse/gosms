@@ -4,10 +4,10 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gohouse/gorose/v2"
-	"novel/lib/gosms"
-	"novel/lib/gosms/adapter"
-	"novel/lib/gosms/adapter/drivers"
-	"novel/lib/gosms/adapter/sdks"
+	"github.com/gohouse/gosms"
+	"github.com/gohouse/gosms/adapter"
+	"github.com/gohouse/gosms/adapter/drivers"
+	"github.com/gohouse/gosms/adapter/sdks"
 )
 
 var gs2 *gosms.GoSMS
