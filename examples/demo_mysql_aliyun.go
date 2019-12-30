@@ -10,21 +10,26 @@ import (
 	"github.com/gohouse/gosms/adapter/sdks"
 )
 
-var gs *gosms.GoSMS
-
-func init() {
-	var aliOpts = &sdks.AliyunOptions{
-		SignName:     "123",
-		TemplateCode: "gsfas",
-		OutId:        "1",
-		AccessKeyId:  "xxxxxxxxxxx",
-		AccessSecret: "xxxxxxxxxxxxxx",
-	}
-	gs = gosms.NewGoSMS(DB(), drivers.NewMysqlDriver(), gosms.Sdk{China: sdks.NewAliyunSdk(aliOpts)})
+// 阿里云公共配置
+var aliOpts = &sdks.AliyunOptions{
+	SignName:     "123",
+	TemplateCode: "gsfas",
+	OutId:        "1",
+	AccessKeyId:  "xxxxxxxxxxx",
+	AccessSecret: "xxxxxxxxxxxxxx",
 }
 
 func main() {
+	// 初始化短信,包括数据库,入库adapter,短信服务
+	var gs = gosms.NewGoSMS(
+		DB(),	// 数据库orm
+		drivers.NewMysqlDriver(),	// 短信入库和核销
+		gosms.Sdk{China: sdks.NewAliyunSdk(aliOpts)},	// 短信服务商
+	)
+
+	// 短信验证码
 	var code = "231532"
+	// 入库的数据
 	var sms = adapter.Sms{
 		Code:      code,
 		MobilePre: 12,
@@ -32,17 +37,20 @@ func main() {
 		Ip:        "8.8.8.8",
 	}
 
+	// 发送短信
 	err := gs.SendSMS(&sms)
 	fmt.Println(err)
 
+	// 核销短信
 	//err = gs.CheckSMS(&sms)
 	//fmt.Println(err)
 }
 
+// 试用gorose, 初始化数据库
 func DB() *gorose.Engin {
 	engin, err := gorose.Open(&gorose.Config{
 		Driver: "mysql",
-		Dsn:    "root:root@tcp(10.10.35.204:3306)/novel?charset=utf8",
+		Dsn:    "root:root@tcp(localhost:3306)/novel?charset=utf8",
 		Prefix: "nv_",
 	})
 	if err != nil {

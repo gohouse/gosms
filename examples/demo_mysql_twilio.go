@@ -44,7 +44,7 @@ func main() {
 func DB2() *gorose.Engin {
 	engin, err := gorose.Open(&gorose.Config{
 		Driver: "mysql",
-		Dsn:    "root:root@tcp(10.10.35.204:3306)/novel?charset=utf8",
+		Dsn:    "root:root@tcp(localhost:3306)/novel?charset=utf8",
 		Prefix: "nv_",
 	})
 	if err != nil {
