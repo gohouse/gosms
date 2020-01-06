@@ -19,7 +19,7 @@ func init() {
 		AccessKeyId:  "ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		AccessSecret: "ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 	}
-	gs2 = gosms.NewGoSMS(DB2(), drivers.NewMysqlDriver(), gosms.Sdk{Global: sdks.NewTwilioSdk(twilioOptions)})
+	gs2 = gosms.NewGoSMS(DB2(), drivers.NewMysqlDriver(), gosms.Sdk{gosms.CC_GLOBAL: sdks.NewTwilioSdk(twilioOptions)})
 }
 
 func main() {

@@ -22,9 +22,9 @@ var aliOpts = &sdks.AliyunOptions{
 func main() {
 	// 初始化短信,包括数据库,入库adapter,短信服务
 	var gs = gosms.NewGoSMS(
-		DB(),	// 数据库orm
-		drivers.NewMysqlDriver(),	// 短信入库和核销
-		gosms.Sdk{China: sdks.NewAliyunSdk(aliOpts)},	// 短信服务商
+		DB(),                                      // 数据库orm
+		drivers.NewMysqlDriver(),                  // 短信入库和核销
+		gosms.Sdk{gosms.CC_CN: sdks.NewAliyunSdk(aliOpts)}, // 短信服务商
 	)
 
 	// 短信验证码

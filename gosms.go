@@ -7,25 +7,26 @@ import (
 	"github.com/gohouse/gosms/adapter"
 )
 
-// Sdk ...
-type Sdk struct {
-	// 中国的短信接口
-	China adapter.SdkAdapter
-	// 国际短信接口
-	Global adapter.SdkAdapter
-}
+// Sdk 运营商sdk
+type Sdk map[int64]adapter.SdkAdapter
+//type Sdk struct {
+//	// 中国的短信接口
+//	China adapter.SdkAdapter
+//	// 国际短信接口
+//	Global adapter.SdkAdapter
+//}
 
-// Driver ...
+// Driver 保存数据库的适配器,晚上自动入库与核销
 type Driver adapter.DriverAdapter
 
-// GoSMS ...
+// GoSMS sms主体
 type GoSMS struct {
 	engin  *gorose.Engin
 	driver adapter.DriverAdapter
 	sdk    Sdk
 }
 
-// NewGoSMS ...
+// NewGoSMS 初始化sms
 func NewGoSMS(engin *gorose.Engin, driver Driver, sdk Sdk) *GoSMS {
 	var s = &GoSMS{engin: engin, driver: driver, sdk: sdk}
 	// 初始化sms表
@@ -36,9 +37,9 @@ func NewGoSMS(engin *gorose.Engin, driver Driver, sdk Sdk) *GoSMS {
 	return s
 }
 
-// SendSMS ...
+// SendSMS 发送短信
 func (s *GoSMS) SendSMS(sms *adapter.Sms) (err error) {
-	// 生成短信发送记录
+	// 生成短信发送记录,使用数据库适配器保存本地数据库
 	lastInsertId, err := s.driver.GenerateSms(s.engin, sms)
 	if err != nil {
 		return
@@ -47,11 +48,14 @@ func (s *GoSMS) SendSMS(sms *adapter.Sms) (err error) {
 
 	// 调用sdk发送短信
 	var res adapter.SmsResponse
-	if sms.MobilePre == 86 {
-		res = s.sdk.China.SendSMS(sms)
-	} else {
-		res = s.sdk.Global.SendSMS(sms)
+	if sdkTmp,ok := s.sdk[sms.MobilePre]; ok {
+		res = sdkTmp.SendSMS(sms)
 	}
+	//if sms.MobilePre == 86 {	// 调用国内的短信服务
+	//	res = s.sdk.China.SendSMS(sms)
+	//} else {	// 国际服务
+	//	res = s.sdk.Global.SendSMS(sms)
+	//}
 
 	// 记录返回结果
 	if res.Error == nil {
@@ -78,7 +82,7 @@ func (s *GoSMS) SendSMS(sms *adapter.Sms) (err error) {
 	return nil
 }
 
-// CheckSMS ...
+// CheckSMS 核销短信
 func (s *GoSMS) CheckSMS(sms *adapter.Sms) (err error) {
 	// 检查是否已经发送了验证码
 	err = s.driver.GetLatestSms(s.engin, sms)
