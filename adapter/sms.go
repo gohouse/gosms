@@ -8,7 +8,7 @@ type Sms struct {
 	Mobile     string `gorose:"mobile" json:"mobile"`           // 手机号
 	Ip         string `gorose:"ip" json:"ip"`                   // ip
 	OrderNo    string `gorose:"order_no" json:"order_no"`       // 唯一编号
-	SendResult string `gorose:"send_result" json:"send_result"` // 原始返回的结果
+	SendResult *string `gorose:"send_result" json:"send_result"` // 原始返回的结果
 	CreatedAt  string `gorose:"created_at" json:"created_at"`
 }
 
