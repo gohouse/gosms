@@ -41,13 +41,16 @@ func (*MysqlDriver) UpdateSmsSendResult(db *gorose.Engin, sms *adapter.Sms) (pki
 
 // GetLatestSms 根据条件获取最新一条发送结果
 func (*MysqlDriver) GetLatestSms(db *gorose.Engin, sms *adapter.Sms) (err error)  {
-	return db.NewOrm().Table(sms).
+	var dba = db.NewOrm()
+
+	err = dba.Table(sms).
 		Where("mobile_pre", sms.MobilePre).
 		Where("mobile", sms.Mobile).
 		Where("code", sms.Code).
 		Where("sms_status", "<", 2).
 		Order("id desc").
 		Select()
+	return
 }
 
 
