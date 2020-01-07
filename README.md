@@ -49,7 +49,9 @@ func main() {
 	var gs = gosms.NewGoSMS(
 		DB(),	// 数据库orm
 		drivers.NewMysqlDriver(),	// 短信入库和核销
-		gosms.Sdk{China: sdks.NewAliyunSdk(aliOpts)},	// 短信服务商
+		// 配置sdk, gosms.CC_CN 为中国
+		// gosms.CC_Global 为全球, 另外可以指定人员国家,具体参考 gosms.CallingCode
+		gosms.Sdk{gosms.CC_CN: sdks.NewAliyunSdk(aliOpts)},	// 短信服务商
 	)
 
 	// 短信验证码

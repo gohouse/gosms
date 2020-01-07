@@ -8,7 +8,7 @@ import (
 )
 
 // Sdk 运营商sdk
-type Sdk map[int64]adapter.SdkAdapter
+type Sdk map[CallingCode]adapter.SdkAdapter
 //type Sdk struct {
 //	// 中国的短信接口
 //	China adapter.SdkAdapter
@@ -48,7 +48,8 @@ func (s *GoSMS) SendSMS(sms *adapter.Sms) (err error) {
 
 	// 调用sdk发送短信
 	var res adapter.SmsResponse
-	if sdkTmp,ok := s.sdk[sms.MobilePre]; ok {
+	mpre := CallingCode(sms.MobilePre)
+	if sdkTmp,ok := s.sdk[mpre]; ok {
 		res = sdkTmp.SendSMS(sms)
 	}
 	//if sms.MobilePre == 86 {	// 调用国内的短信服务
