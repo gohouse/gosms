@@ -36,7 +36,7 @@ func (*MysqlDriver) GenerateSms(db *gorose.Engin, sms *adapter.Sms) (pkid int64,
 
 // UpdateSmsStatus 更新短信发送结果信息
 func (*MysqlDriver) UpdateSmsSendResult(db *gorose.Engin, sms *adapter.Sms) (pkid int64, err error)  {
-	return db.NewOrm().Where("id",sms.Id).Update(sms)
+	return db.NewOrm().Where("id",sms.Id).ExtraCols("send_result").Update(sms)
 }
 
 // GetLatestSms 根据条件获取最新一条发送结果

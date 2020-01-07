@@ -72,7 +72,7 @@ func (s *GoSMS) SendSMS(sms *adapter.Sms) (err error) {
 		sms.SmsStatus = 1
 		sms.OrderNo = res.OrderNo
 	}
-	sms.SendResult = ""
+
 	if res.Error != nil {
 		sms.SendResult = res.Error.Error()
 	} else if res.Result != nil {
