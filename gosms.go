@@ -1,10 +1,10 @@
 package gosms
 
 import (
-	"encoding/json"
 	"errors"
 	"github.com/gohouse/gorose/v2"
 	"github.com/gohouse/gosms/adapter"
+	"github.com/gohouse/t"
 )
 
 // Sdk 运营商sdk
@@ -76,8 +76,7 @@ func (s *GoSMS) SendSMS(sms *adapter.Sms) (err error) {
 		*sms.SendResult = res.Error.Error()
 	}
 	if res.Result != nil {
-		js, _ := json.Marshal(res.Result)
-		*sms.SendResult = string(js)
+		*sms.SendResult = t.New(res.Result).String()
 	}
 	//aff, err := s.engin.NewOrm().Where("id",lastInsertId).Update(sms)
 	aff, err := s.driver.UpdateSmsSendResult(s.engin, sms)
