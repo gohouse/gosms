@@ -54,6 +54,12 @@ func (s *GoSMS) SendSMS(sms *adapter.Sms) (err error) {
 	mpre := CallingCode(sms.MobilePre)
 	if sdkTmp,ok := s.sdk[mpre]; ok {
 		res = sdkTmp.SendSMS(sms)
+	} else {
+		sdkTmp = s.sdk[CC_GLOBAL]
+		if sdkTmp == nil {
+			return errors.New("短信sdk未就绪")
+		}
+		res = sdkTmp.SendSMS(sms)
 	}
 	//if sms.MobilePre == 86 {	// 调用国内的短信服务
 	//	res = s.sdk.China.SendSMS(sms)
