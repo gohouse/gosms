@@ -28,6 +28,9 @@ type GoSMS struct {
 
 // NewGoSMS 初始化sms
 func NewGoSMS(engin *gorose.Engin, driver Driver, sdk Sdk) *GoSMS {
+	if engin==nil || driver == nil || sdk == nil {
+		panic("对想为空")
+	}
 	var s = &GoSMS{engin: engin, driver: driver, sdk: sdk}
 	// 初始化sms表
 	err := driver.CreateTable(engin)
@@ -64,11 +67,11 @@ func (s *GoSMS) SendSMS(sms *adapter.Sms) (err error) {
 		sms.OrderNo = res.OrderNo
 	}
 	if res.Error != nil {
-		sms.SendResult = res.Error.Error()
+		*sms.SendResult = res.Error.Error()
 	}
 	if res.Result != nil {
 		js, _ := json.Marshal(res.Result)
-		sms.SendResult = string(js)
+		*sms.SendResult = string(js)
 	}
 	//aff, err := s.engin.NewOrm().Where("id",lastInsertId).Update(sms)
 	aff, err := s.driver.UpdateSmsSendResult(s.engin, sms)
