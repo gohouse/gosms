@@ -1,6 +1,7 @@
 package drivers
 
 import (
+	"errors"
 	"fmt"
 	gorose "github.com/gohouse/gorose/v2"
 	"github.com/gohouse/gosms/adapter"
@@ -41,15 +42,25 @@ func (*MysqlDriver) UpdateSmsSendResult(db *gorose.Engin, sms *adapter.Sms) (pki
 
 // GetLatestSms 根据条件获取最新一条发送结果
 func (*MysqlDriver) GetLatestSms(db *gorose.Engin, sms *adapter.Sms) (err error)  {
+	var code = sms.Code
 	var dba = db.NewOrm()
 
 	err = dba.Table(sms).
 		Where("mobile_pre", sms.MobilePre).
 		Where("mobile", sms.Mobile).
-		Where("code", sms.Code).
+		//Where("code", sms.Code).
 		Where("sms_status", "<", 2).
 		Order("id desc").
 		Select()
+	if err!=nil {
+		return
+	}
+	if sms.Id == 0 {
+		return errors.New("请先发送验证码")
+	}
+	if code != sms.Code {
+		return errors.New("验证码有误")
+	}
 	return
 }
 

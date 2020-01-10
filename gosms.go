@@ -98,11 +98,7 @@ func (s *GoSMS) CheckSMS(sms *adapter.Sms) (err error) {
 	if err != nil {
 		return
 	}
-
-	if sms.Id == 0 {
-		return errors.New("请先发送验证码")
-	}
-
+	
 	//// 向运营商核对验证码
 	//err = s.sdk.CheckSMS(sms)
 	//if err != nil {
