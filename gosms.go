@@ -73,9 +73,10 @@ func (s *GoSMS) SendSMS(sms *adapter.Sms) (err error) {
 		sms.OrderNo = res.OrderNo
 	}
 
-	if res.Error != nil {
-		sms.SendResult = res.Error.Error()
-	} else if res.Result != nil {
+	//if res.Error != nil {
+	//	sms.SendResult = res.Error.Error()
+	//} else
+	if res.Result != nil {
 		sms.SendResult = t.New(res.Result).String()
 	}
 	//aff, err := s.engin.NewOrm().Where("id",lastInsertId).Update(sms)
